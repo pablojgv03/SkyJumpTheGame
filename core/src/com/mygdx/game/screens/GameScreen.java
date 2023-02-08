@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 
+import static com.mygdx.game.extra.Utils.JUMP_SPEED;
 import static com.mygdx.game.extra.Utils.USER_FLOOR;
 import static com.mygdx.game.extra.Utils.USER_PLATFORM;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -54,6 +56,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     //Platforms Array
     private Array<Platform> arrayPlatforms;
 
+    int screenWidth = Gdx.graphics.getWidth();
+    int screenHeight = Gdx.graphics.getHeight();
+
     //Depuración
     private Box2DDebugRenderer debugRenderer;
     //camara ortografica
@@ -65,7 +70,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         super(mainGame);
 
         //inicializacion del mundo
-        this.world = new World(new Vector2(0,-15), true);
+        this.world = new World(new Vector2(0,-14), true);
         //se le pasa el objeto que implementa la interfaz
         this.world.setContactListener(this);
         //siempre mantiene la relación de aspecto del tamaño de la pantalla virtual
@@ -129,26 +134,31 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.stage.addActor(this.platform);
     }
 
-    private void timeToJump(){
-        Vector2 platfPosition = platform.getPosition();
-        Vector2 slimePosition = slime.getPosition();
-        Vector2 slimeVelocity = this.slime.getLinearVelocity();
-        if((round(slimePosition.y)) == (round(platfPosition.y)) && slimeVelocity.y < 0){
-            System.out.println(round(slimePosition.y) + " igual que ");
-            slime.jump();
+    private void gyroMovement() {
+        System.out.println("x" + slime.getX()+"        ");
+        if (slime.getX() < -0.35) {
+            // Ajusta la posición para que aparezca por el lado derecho
+            slime.derecha();
         }
-    }
 
-    private BigDecimal round(float number){
-        return new BigDecimal(number).setScale(1, RoundingMode.HALF_UP);
-    }
+            // Verifica si el actor ha salido de la pantalla por el lado derecho
+        if (slime.getX() > WORLD_WIDTH-0.35) {
+            // Ajusta la posición para que aparezca por el lado izquierdo
+            slime.izquierda();
+        }
 
+    }
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.stage.act();
-        timeToJump();
         platformMov();
+        if(gyroscopeAvail){
+            float gyroX = Gdx.input.getAccelerometerX();
+            slime.move(-gyroX, slime.getLinearVelocity().y);
+        }
+        ortCamera.position.set(WORLD_WIDTH/2, slime.getY() + slime.getHeight() / 2, 0);
+        gyroMovement();
         //Esto realiza principalmente la detección de colisiones
         this.world.step(delta,6,2);
         //dibuja la escena
@@ -157,6 +167,8 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.debugRenderer.render(this.world, this.ortCamera.combined);
 
     }
+
+
 
     public void platformMov(){
 
@@ -203,14 +215,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         System.out.println(contact.getFixtureA().getUserData());
         if (areColider(contact, USER_SLIME, USER_PLATFORM)&&slime.getLinearVelocity().y < 0) {
             this.scoreNumber++;
-            slime.jump();
-            System.out.println("puntuacion"+ scoreNumber);
-            if(gyroscopeAvail){
-                float gyroX = Gdx.input.getAccelerometerX();
-                float gyroY = Gdx.input.getGyroscopeY();
-                float gyroZ = Gdx.input.getGyroscopeZ();
-                System.out.println(gyroX + "x    "+ gyroY+"y   "+gyroZ+"z   ");
-            }
+            slime.move(0,JUMP_SPEED);
         } else {
             System.out.println("hola");
         }

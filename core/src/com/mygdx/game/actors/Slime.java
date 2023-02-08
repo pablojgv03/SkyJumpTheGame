@@ -2,16 +2,20 @@ package com.mygdx.game.actors;
 
 
 
+import static com.mygdx.game.extra.Utils.JUMP_SPEED;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
+import static com.mygdx.game.extra.Utils.WORLD_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -20,7 +24,6 @@ public class Slime extends Actor {
     //Static final variables
     private static final float SLIME_WIDTH = 0.7f;
     private static final float SLIME_HEIGHT = 0.7f;
-    private static final float JUMP_SPEED = 11f;
     public static final int STATE_ALIVE = 0;
     public static final int STATE_DEAD = 1;
 
@@ -38,6 +41,9 @@ public class Slime extends Actor {
 
     //Give a form to the body
     private Fixture fixture;
+
+    //Horizontal speed
+    public float xSpeed;
 
     //Save the total time the body has been drawn
     private float stateTime;
@@ -106,11 +112,11 @@ public class Slime extends Actor {
         //jump action
         boolean jump  = Gdx.input.justTouched();
         if(jump){
-            jump();
+            move(0,JUMP_SPEED);
         }
     }
-    public void jump(){
-        this.body.setLinearVelocity(0,JUMP_SPEED);
+    public void move(float x, float y){
+        this.body.setLinearVelocity(x,y);
     }
 
     @Override
@@ -134,8 +140,13 @@ public class Slime extends Actor {
     return this.body.getLinearVelocity();
     }
 
-    public Vector2 getPosition() {
-        return this.body.getPosition();
+
+
+    public void derecha(){
+        this.body.setTransform(new Vector2(WORLD_WIDTH,this.body.getPosition().y), 0);
+    }
+    public void izquierda(){
+        this.body.setTransform(new Vector2(0,this.body.getPosition().y), 0);
     }
 }
 

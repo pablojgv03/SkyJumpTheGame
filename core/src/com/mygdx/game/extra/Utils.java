@@ -8,6 +8,9 @@ public class Utils {
     public static final float WORLD_HEIGHT = 8f;
     public static final float WORLD_WIDTH = 4.8f;
 
+    //VELOCIDAD
+    public static final float JUMP_SPEED = 11f;
+
     //Identificadores
     public static final String ATLAS_MAP = "Atlas.atlas";
     public static final String BACKGROUND_IMAGE = "backGround";
