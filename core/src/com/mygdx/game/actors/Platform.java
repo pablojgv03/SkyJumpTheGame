@@ -1,5 +1,7 @@
 package com.mygdx.game.actors;
 
+import static com.mygdx.game.extra.Utils.PLATFORM_HEIGHT;
+import static com.mygdx.game.extra.Utils.PLATFORM_WIDTH;
 import static com.mygdx.game.extra.Utils.USER_PLATFORM;
 
 import com.badlogic.gdx.Gdx;
@@ -16,15 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.extra.Utils;
 
 public class Platform extends Actor {
-    //Static values
-        //Sizes
-    private static final float PLATFORM_WIDTH = 1.2f;
-    private static final float PLATFORM_HEIGHT = 0.2f;
+
         //Velocity
-    private static final float SPEEDY = 0;//-0.2f
+    public static final float PLATFSPEEDY = -2f;
 
-    private static final float SPEEDX = 0f;//0
+    private static final float SPEEDX = 0;
 
+    public static final float FALLSPEED= -4;
 
     //Texture
     private Animation<TextureRegion> platfAnimation;
@@ -70,7 +70,7 @@ public class Platform extends Actor {
         def.type = BodyDef.BodyType.KinematicBody;
         bodyPlatf = world.createBody(def);
         bodyPlatf.setUserData(USER_PLATFORM);
-        bodyPlatf.setLinearVelocity(SPEEDX,SPEEDY);
+        bodyPlatf.setLinearVelocity(SPEEDX,PLATFSPEEDY);
     }
 
 
@@ -85,7 +85,14 @@ public class Platform extends Actor {
         //shape dispose
         shape.dispose();
     }
+    public void goDown(float fallSpeed){
+        this.bodyPlatf.setLinearVelocity(0,fallSpeed);
+    }
 
+
+    public boolean isOutOfScreen(){
+        return this.bodyPlatf.getPosition().y <= PLATFORM_HEIGHT;
+    }
 
 
     //Platform action

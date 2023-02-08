@@ -4,12 +4,21 @@ public class Utils {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
 
+    //Camera aperture dimensions
+
+    public static final float CAMERA_HEIGHT = 8f;
+    public static final float CAMERA_WIDTH = 4.8f;
+
     //Dimensiones del mundo
-    public static final float WORLD_HEIGHT = 8f;
+    public static final float WORLD_HEIGHT = 12f;
     public static final float WORLD_WIDTH = 4.8f;
 
+    //Platform Sizes
+    public static final float PLATFORM_WIDTH = 1.2f;
+    public static final float PLATFORM_HEIGHT = 0.2f;
+
     //VELOCIDAD
-    public static final float JUMP_SPEED = 11f;
+    public static final float JUMP_SPEED = 10f;
 
     //Identificadores
     public static final String ATLAS_MAP = "Atlas.atlas";
