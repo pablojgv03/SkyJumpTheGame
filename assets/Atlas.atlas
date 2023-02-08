@@ -1,0 +1,69 @@
+
+Atlas.png
+size: 1376, 414
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Slime
+  rotate: false
+  xy: 732, 36
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+backGround
+  rotate: false
+  xy: 2, 2
+  size: 728, 410
+  orig: 728, 410
+  offset: 0, 0
+  index: -1
+platform1
+  rotate: false
+  xy: 1054, 345
+  size: 320, 67
+  orig: 320, 67
+  offset: 0, 0
+  index: -1
+platform2
+  rotate: false
+  xy: 1054, 277
+  size: 320, 66
+  orig: 320, 66
+  offset: 0, 0
+  index: -1
+platform3
+  rotate: false
+  xy: 1054, 209
+  size: 320, 66
+  orig: 320, 66
+  offset: 0, 0
+  index: -1
+platform4
+  rotate: false
+  xy: 732, 275
+  size: 320, 67
+  orig: 320, 67
+  offset: 0, 0
+  index: -1
+platform5
+  rotate: false
+  xy: 732, 206
+  size: 320, 67
+  orig: 320, 67
+  offset: 0, 0
+  index: -1
+platform6
+  rotate: false
+  xy: 732, 138
+  size: 320, 66
+  orig: 320, 66
+  offset: 0, 0
+  index: -1
+platform7
+  rotate: false
+  xy: 732, 344
+  size: 320, 68
+  orig: 320, 68
+  offset: 0, 0
+  index: -1
