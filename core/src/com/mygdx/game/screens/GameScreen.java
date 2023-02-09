@@ -41,7 +41,7 @@ import com.mygdx.game.actors.Slime;
 
 public class GameScreen  extends BaseScreen implements ContactListener {
     //Linear Interpolation (to make camera movements more fluid)
-    private static final float lerp = 0.04f;
+    private static final float lerp = 0.08f;
     private  static final float PLATFORM_SPAWN_TIME = 2f;
 
     private float platformSpawnTime;
@@ -149,7 +149,6 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     private void endScreenTeleport() {
-        System.out.println("x" + slime.getX()+"        ");
         if (slime.getX() < -0.35) {
             // Ajusta la posición para que aparezca por el lado derecho
             slime.derecha();
@@ -210,7 +209,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             this.lastCreatedTime+=delta;
             this.platformSpawnTime+=delta;
             //Todo 4. Si el tiempo acumulado es mayor que el tiempo que hemos establecido, se crea una tubería...
-            if(lastCreatedTime>1.2f){
+            if(lastCreatedTime>1.38f){
                 enougth();
                 if(this.platformSpawnTime >= PLATFORM_SPAWN_TIME) {
 
