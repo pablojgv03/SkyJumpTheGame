@@ -209,7 +209,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             this.lastCreatedTime+=delta;
             this.platformSpawnTime+=delta;
             //Todo 4. Si el tiempo acumulado es mayor que el tiempo que hemos establecido, se crea una tubería...
-            if(lastCreatedTime>1.399f){
+            if(lastCreatedTime>1.3990f){
                 enougth();
                 if(this.platformSpawnTime >= PLATFORM_SPAWN_TIME) {
 
