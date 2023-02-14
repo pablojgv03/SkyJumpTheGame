@@ -42,7 +42,7 @@ import com.mygdx.game.actors.Slime;
 public class GameScreen  extends BaseScreen implements ContactListener {
     //Linear Interpolation (to make camera movements more fluid)
     private static final float lerp = 0.08f;
-    private  static final float PLATFORM_SPAWN_TIME = 2f;
+    private  static final float PLATFORM_SPAWN_TIME = 2.25f;
 
     private float platformSpawnTime;
     private float lastCreatedTime;
@@ -209,7 +209,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             this.lastCreatedTime+=delta;
             this.platformSpawnTime+=delta;
             //Todo 4. Si el tiempo acumulado es mayor que el tiempo que hemos establecido, se crea una tubería...
-            if(lastCreatedTime>1.38f){
+            if(lastCreatedTime>1.399f){
                 enougth();
                 if(this.platformSpawnTime >= PLATFORM_SPAWN_TIME) {
 
@@ -217,7 +217,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
                     this.platformSpawnTime-=PLATFORM_SPAWN_TIME;
                     float posRandomX = MathUtils.random((PLATFORM_WIDTH/2), WORLD_WIDTH-(PLATFORM_WIDTH/2));
                     //Cambiamos la coordenada x para que se cree fuera de la pantalla (5f)
-                    this.platform = new Platform(this.world, platfSprite, new Vector2(posRandomX, 12.2f));
+                    this.platform = new Platform(this.world, platfSprite, new Vector2((PLATFORM_WIDTH/2), 12.2f));
                     arrayPlatforms.add(this.platform);
                     this.stage.addActor(this.platform);
                     lastCreatedTime=0;
@@ -284,6 +284,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     public void enougth(){
+        //Han bajado lo suficiente entonces vuelvo a establecer su velocidad al valor por defecto
         for (Platform platform1 : this.arrayPlatforms ){
             platform1.goDown(PLATFSPEEDY);
         }
