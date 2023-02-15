@@ -83,6 +83,8 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         //se le pasa el objeto que implementa la interfaz
         this.world.setContactListener(this);
 
+
+
         //siempre mantiene la relación de aspecto del tamaño de la pantalla virtual
         //(ventana virtual), al tiempo que la escala tanto como sea posible para
         //que se ajuste a la pantalla.
@@ -119,14 +121,25 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     public void addActor(){
         //Obtengo el la region de la textura de nuestro actor para pasarsela por parametro
         TextureRegion SlimeTr = mainGame.assetManager.getSlimeTR();
-        this.slime = new Slime(this.world, new Vector2(1f,4f), SlimeTr);
+        this.slime = new Slime(this.world, new Vector2(2.4f,6f), SlimeTr);
         //añado el actor a la escena
         this.stage.addActor(this.slime);
     }
 
+    public void addInitPlarforms(){
+        Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
+        int posicion = 4;
+        for(int i =0; i<3; i++) {
+            this.platform = new Platform(this.world, platfSprite, new Vector2(2.4f, posicion));
+            arrayPlatforms.add(this.platform);
+            this.stage.addActor(this.platform);
+            posicion += 5;
+        }
+    }
+
     private void addFloor() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(WORLD_WIDTH / 2f, 0f);
+        bodyDef.position.set(WORLD_WIDTH / 2f, 1.2f);
         bodyDef.type = BodyDef.BodyType.StaticBody;
         Body body = world.createBody(bodyDef);
         body.setUserData(USER_FLOOR);
@@ -193,6 +206,8 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         addBackground();
         addActor();
         addFloor();
+        addInitPlarforms();
+
         //addCeiling();
         //addPlatform();
     }
@@ -209,7 +224,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             this.lastCreatedTime+=delta;
             this.platformSpawnTime+=delta;
             //Todo 4. Si el tiempo acumulado es mayor que el tiempo que hemos establecido, se crea una tubería...
-            if(lastCreatedTime>1.3990f){
+            if(lastCreatedTime>1.40f){
                 enougth();
                 if(this.platformSpawnTime >= PLATFORM_SPAWN_TIME) {
 
@@ -217,7 +232,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
                     this.platformSpawnTime-=PLATFORM_SPAWN_TIME;
                     float posRandomX = MathUtils.random((PLATFORM_WIDTH/2), WORLD_WIDTH-(PLATFORM_WIDTH/2));
                     //Cambiamos la coordenada x para que se cree fuera de la pantalla (5f)
-                    this.platform = new Platform(this.world, platfSprite, new Vector2((PLATFORM_WIDTH/2), 12.2f));
+                    this.platform = new Platform(this.world, platfSprite, new Vector2(posRandomX, 15f));
                     arrayPlatforms.add(this.platform);
                     this.stage.addActor(this.platform);
                     lastCreatedTime=0;
@@ -282,6 +297,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             System.out.println("hola");
         }
     }
+
 
     public void enougth(){
         //Han bajado lo suficiente entonces vuelvo a establecer su velocidad al valor por defecto

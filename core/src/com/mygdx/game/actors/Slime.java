@@ -109,12 +109,8 @@ public class Slime extends Actor {
 
     @Override
     public void act(float delta) {
-        //jump action
-        boolean jump  = Gdx.input.justTouched();
-        if(jump){
-            move(0,JUMP_SPEED);
-        }
     }
+
     public void move(float x, float y){
         this.body.setLinearVelocity(x,y);
     }

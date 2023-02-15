@@ -1,12 +1,12 @@
 
 Atlas.png
-size: 1097, 1924
+size: 1097, 1947
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Slime
   rotate: false
-  xy: 775, 1341
+  xy: 775, 1364
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -14,55 +14,55 @@ Slime
 backGround
   rotate: false
   xy: 2, 2
-  size: 771, 1920
-  orig: 771, 1920
+  size: 771, 1943
+  orig: 771, 1943
   offset: 0, 0
   index: -1
 platform1
   rotate: false
-  xy: 775, 1716
+  xy: 775, 1739
   size: 320, 67
   orig: 320, 67
   offset: 0, 0
   index: -1
 platform2
   rotate: false
-  xy: 775, 1579
+  xy: 775, 1602
   size: 320, 66
   orig: 320, 66
   offset: 0, 0
   index: -1
 platform3
   rotate: false
-  xy: 775, 1443
+  xy: 775, 1466
   size: 320, 66
   orig: 320, 66
   offset: 0, 0
   index: -1
 platform4
   rotate: false
-  xy: 775, 1785
+  xy: 775, 1808
   size: 320, 67
   orig: 320, 67
   offset: 0, 0
   index: -1
 platform5
   rotate: false
-  xy: 775, 1647
+  xy: 775, 1670
   size: 320, 67
   orig: 320, 67
   offset: 0, 0
   index: -1
 platform6
   rotate: false
-  xy: 775, 1511
+  xy: 775, 1534
   size: 320, 66
   orig: 320, 66
   offset: 0, 0
   index: -1
 platform7
   rotate: false
-  xy: 775, 1854
+  xy: 775, 1877
   size: 320, 68
   orig: 320, 68
   offset: 0, 0
