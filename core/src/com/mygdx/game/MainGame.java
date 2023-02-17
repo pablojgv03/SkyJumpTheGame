@@ -17,11 +17,13 @@ public class MainGame extends Game {
 	//SE CREA LA PANTALLA DEL JUEGO Y SE LE ESTABLECE
 	@Override
 	public void create() {
+
 		this.assetManager = new AssetMan();
-		//se inicializa la pantalla del juego
+		//Initialize the game screens
+		this. getReadyScreen = new GetReadyScreen(this);
 		this. gameScreen = new GameScreen(this);
 		//Se establece la pantalla
-		setScreen(this.gameScreen);
+		setScreen(this.getReadyScreen);
 	}
 }
 

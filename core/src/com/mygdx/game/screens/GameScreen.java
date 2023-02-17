@@ -201,14 +201,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         //dibuja la escena
         this.stage.draw();
         //Establece la matriz de proyección.
-        this.debugRenderer.render(this.world, this.ortCamera.combined);
+        //this.debugRenderer.render(this.world, this.ortCamera.combined);
         removePlatform();
     }
-
-
-
-
-
 
     @Override
     public void show() {
@@ -268,8 +263,6 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             }
         }
     }
-
-
 
     @Override
     public void hide() {

@@ -14,8 +14,8 @@ public class Utils {
     public static final float WORLD_WIDTH = 4.8f;
 
     //Platform Sizes
-    public static final float PLATFORM_WIDTH = 1.2f;
-    public static final float PLATFORM_HEIGHT = 0.2f;
+    public static float PLATFORM_WIDTH = 1.2f;
+    public static float PLATFORM_HEIGHT = 0.2f;
 
     //VELOCIDAD
     public static final float JUMP_SPEED = 10f;
