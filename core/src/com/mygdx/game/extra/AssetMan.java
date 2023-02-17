@@ -2,6 +2,8 @@ package com.mygdx.game.extra;
 
 import static com.mygdx.game.extra.Utils.ATLAS_MAP;
 import static com.mygdx.game.extra.Utils.BACKGROUND_IMAGE;
+import static com.mygdx.game.extra.Utils.BACKGROUND_M;
+import static com.mygdx.game.extra.Utils.JUMP_S;
 import static com.mygdx.game.extra.Utils.PLATFORM1;
 import static com.mygdx.game.extra.Utils.PLATFORM2;
 import static com.mygdx.game.extra.Utils.PLATFORM3;
@@ -12,6 +14,8 @@ import static com.mygdx.game.extra.Utils.PLATFORM7;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,9 +32,16 @@ public class AssetMan {
         //carga el atlas
         assetManager.load(ATLAS_MAP, TextureAtlas.class);
         //Bloquea hasta que todos los assets estan cargados
+        assetManager.load(JUMP_S, Sound.class);
+        assetManager.load(BACKGROUND_M, Music.class);
+
+
         assetManager.finishLoading();
         //Se le pasa el mapa de atlas procesado por el assetManager y se guarda en el textureAtlas
         this.textureAtlas = assetManager.get(ATLAS_MAP);
+
+
+
     }
     //BACKGROUND IMAGE
     public TextureRegion getBackground(){
@@ -51,6 +62,15 @@ public class AssetMan {
                 textureAtlas.findRegion(PLATFORM6),
                 textureAtlas.findRegion(PLATFORM7));
     }
+    public Sound getJumpS(){
+        return this.assetManager.get(JUMP_S);
+    }
+
+    public Music getBacgroundM(){
+        return this.assetManager.get(BACKGROUND_M);
+    }
+
+
 }
 
 

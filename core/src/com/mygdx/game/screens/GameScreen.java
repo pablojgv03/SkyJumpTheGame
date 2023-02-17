@@ -15,6 +15,8 @@ import static com.mygdx.game.extra.Utils.WORLD_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -67,6 +69,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
 
+    private Music backgroundM;
+    private Sound jumpS;
+
     //Depuración
     private Box2DDebugRenderer debugRenderer;
     //camara ortografica
@@ -92,6 +97,10 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
         //Se le pone al stage
         this.stage = new Stage(fitViewport);
+
+        //Music & sounds
+        this.backgroundM = this.mainGame.assetManager.getBacgroundM();
+        this.jumpS = this.mainGame.assetManager.getJumpS();
 
         //Inicializo el array
         this.arrayPlatforms = new Array();
@@ -208,6 +217,8 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         addFloor();
         addInitPlarforms();
 
+        this.backgroundM.setLooping(true);
+        this.backgroundM.play();
         //addCeiling();
         //addPlatform();
     }
@@ -291,6 +302,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         if (areColider(contact, USER_SLIME, USER_PLATFORM)&&slime.getLinearVelocity().y < 0) {
             this.scoreNumber++;
             slime.move(0,JUMP_SPEED);
+            this.jumpS.play();
             platfGoDown();
             platformSpawnTime +=4;
         } else {

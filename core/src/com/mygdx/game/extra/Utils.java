@@ -30,6 +30,9 @@ public class Utils {
     public static final String PLATFORM5 = "platform5";
     public static final String PLATFORM6 = "platform6";
     public static final String PLATFORM7 = "platform7";
+        //Sounds
+    public static final String JUMP_S = "jumpS.mp3";
+    public static final String BACKGROUND_M = "backGroundM.mp3";
 
     //Identificador de cuerpos
         //actor
