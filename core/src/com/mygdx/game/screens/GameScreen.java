@@ -30,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -54,6 +55,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     private Slime slime;
     //Platform
     private Platform platform;
+    //Floor
+    private Fixture fixFloor;
+    private Body bodyFloor;
     //Fondo
     private Image background;
 
@@ -111,6 +115,8 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
         //Se inicializa el renderizado
         this.debugRenderer = new Box2DDebugRenderer();
+
+        prepareScore();
     }
 
 
@@ -135,6 +141,20 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.stage.addActor(this.slime);
     }
 
+    private void prepareScore(){
+/*        //Todo 3.1 ...Y la inicializamos a 0
+        this.scoreNumber = 0;
+        this.scoreNumber = this.mainGame.assetManager.getFont();
+        this.scoreNumber.getData().scale(1f);
+
+
+        this.fontCamera = new OrthographicCamera();
+        this.fontCamera.setToOrtho(false, SCREEN_WIDTH,SCREEN_HEIGTH);
+        this.fontCamera.update();
+*/
+    }
+
+
     public void addInitPlarforms(){
         Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
         int posicion = 4;
@@ -150,23 +170,12 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(WORLD_WIDTH / 2f, 1.2f);
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        Body body = world.createBody(bodyDef);
-        body.setUserData(USER_FLOOR);
+        this.bodyFloor = world.createBody(bodyDef);
 
         PolygonShape edge = new PolygonShape();
         edge.setAsBox(WORLD_WIDTH / 2, 0f);
-        body.createFixture(edge, 8);
-        edge.dispose();
-    }
-
-    public void addCeiling(){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        Body body = world.createBody(bodyDef);
-
-        EdgeShape edge = new EdgeShape();
-        edge.set(0,WORLD_HEIGHT,WORLD_WIDTH,WORLD_HEIGHT);
-        body.createFixture(edge, 1);
+        this.fixFloor = this.bodyFloor.createFixture(edge, 3);
+        this.fixFloor.setUserData(USER_FLOOR);
         edge.dispose();
     }
 
@@ -290,16 +299,21 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        //Todo 7. Si 'han colisionado' el pájaro con el contador sumamos 1 al contador...
-        System.out.println(contact.getFixtureA().getUserData());
-        if (areColider(contact, USER_SLIME, USER_PLATFORM)&&slime.getLinearVelocity().y < 0) {
-            this.scoreNumber++;
-            slime.move(0,JUMP_SPEED);
-            this.jumpS.play();
-            platfGoDown();
-            platformSpawnTime +=4;
+
+        if (areColider(contact, USER_SLIME, USER_PLATFORM)) {
+            if(slime.getLinearVelocity().y < 0) {
+                this.scoreNumber++;
+                slime.move(0, JUMP_SPEED);
+                this.jumpS.play();
+                platfGoDown();
+                platformSpawnTime += 4;
+            }
         } else {
-            System.out.println("hola");
+            slime.kill();
+            this.backgroundM.stop();
+            for(Platform platf: arrayPlatforms){
+                platf.stopPlatform();
+            }
         }
     }
 

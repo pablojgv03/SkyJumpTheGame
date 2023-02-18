@@ -13,10 +13,12 @@ import static com.mygdx.game.extra.Utils.PLATFORM6;
 import static com.mygdx.game.extra.Utils.PLATFORM7;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -70,6 +72,10 @@ public class AssetMan {
         return this.assetManager.get(BACKGROUND_M);
     }
 
+    /*
+    public BitmapFont getFont(){
+        return new BitmapFont(Gdx.files.internal(FONT_FNT),Gdx.files.internal(FONT_PNG), false);
+    }*/
 
 }
 

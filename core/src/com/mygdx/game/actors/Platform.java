@@ -95,6 +95,8 @@ public class Platform extends Actor {
     }
 
 
+
+
     //Platform action
     @Override
     public void act(float delta) {
