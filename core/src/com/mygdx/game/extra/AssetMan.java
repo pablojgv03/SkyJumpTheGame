@@ -3,7 +3,11 @@ package com.mygdx.game.extra;
 import static com.mygdx.game.extra.Utils.ATLAS_MAP;
 import static com.mygdx.game.extra.Utils.BACKGROUND_IMAGE;
 import static com.mygdx.game.extra.Utils.BACKGROUND_M;
+import static com.mygdx.game.extra.Utils.FONT_FNT;
+import static com.mygdx.game.extra.Utils.FONT_PNG;
+import static com.mygdx.game.extra.Utils.GETREADY_M;
 import static com.mygdx.game.extra.Utils.JUMP_S;
+import static com.mygdx.game.extra.Utils.KILL_S;
 import static com.mygdx.game.extra.Utils.PLATFORM1;
 import static com.mygdx.game.extra.Utils.PLATFORM2;
 import static com.mygdx.game.extra.Utils.PLATFORM3;
@@ -35,8 +39,9 @@ public class AssetMan {
         assetManager.load(ATLAS_MAP, TextureAtlas.class);
         //Bloquea hasta que todos los assets estan cargados
         assetManager.load(JUMP_S, Sound.class);
+        assetManager.load(KILL_S, Sound.class);
         assetManager.load(BACKGROUND_M, Music.class);
-
+        assetManager.load(GETREADY_M, Music.class);
 
         assetManager.finishLoading();
         //Se le pasa el mapa de atlas procesado por el assetManager y se guarda en el textureAtlas
@@ -67,15 +72,21 @@ public class AssetMan {
     public Sound getJumpS(){
         return this.assetManager.get(JUMP_S);
     }
+    public Sound getKillS(){
+        return this.assetManager.get(KILL_S);
+    }
 
     public Music getBacgroundM(){
         return this.assetManager.get(BACKGROUND_M);
     }
+    public Music getGetReadyM(){
+        return this.assetManager.get(GETREADY_M);
+    }
 
-    /*
+
     public BitmapFont getFont(){
         return new BitmapFont(Gdx.files.internal(FONT_FNT),Gdx.files.internal(FONT_PNG), false);
-    }*/
+    }
 
 }
 

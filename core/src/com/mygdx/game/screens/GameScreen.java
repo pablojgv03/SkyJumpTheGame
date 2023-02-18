@@ -7,6 +7,8 @@ import static com.mygdx.game.extra.Utils.CAMERA_HEIGHT;
 import static com.mygdx.game.extra.Utils.CAMERA_WIDTH;
 import static com.mygdx.game.extra.Utils.JUMP_SPEED;
 import static com.mygdx.game.extra.Utils.PLATFORM_WIDTH;
+import static com.mygdx.game.extra.Utils.SCREEN_HEIGHT;
+import static com.mygdx.game.extra.Utils.SCREEN_WIDTH;
 import static com.mygdx.game.extra.Utils.USER_FLOOR;
 import static com.mygdx.game.extra.Utils.USER_PLATFORM;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
@@ -20,6 +22,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -29,7 +32,6 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -65,7 +67,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     private World world;
 
     //Score
-    private int scoreNumber;
+    public static int scoreNumber;
 
     //Platforms Array
     private Array<Platform> arrayPlatforms;
@@ -74,12 +76,14 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     int screenHeight = Gdx.graphics.getHeight();
 
     private Music backgroundM;
-    private Sound jumpS;
+    private Sound jumpS, killS;
 
     //Depuración
     private Box2DDebugRenderer debugRenderer;
-    //camara ortografica
-    private OrthographicCamera ortCamera;
+    //Orthographic Camera
+    private OrthographicCamera worldOrtCamera;
+    private OrthographicCamera fontOrtCamera;
+    private BitmapFont score;
 
     //Pantalla del juego
     public GameScreen(MainGame mainGame) {
@@ -93,7 +97,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.world.setContactListener(this);
 
 
-
+        scoreNumber = 0;
         //siempre mantiene la relación de aspecto del tamaño de la pantalla virtual
         //(ventana virtual), al tiempo que la escala tanto como sea posible para
         //que se ajuste a la pantalla.
@@ -105,13 +109,14 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         //Music & sounds
         this.backgroundM = this.mainGame.assetManager.getBacgroundM();
         this.jumpS = this.mainGame.assetManager.getJumpS();
+        this.killS = this.mainGame.assetManager.getKillS();
 
         //Inicializo el array
         this.arrayPlatforms = new Array();
         this.platformSpawnTime = 0f;
         this.lastCreatedTime = 0f;
         //Se inicializa la camara ortografica
-        this.ortCamera = (OrthographicCamera) this.stage.getCamera();
+        this.worldOrtCamera = (OrthographicCamera) this.stage.getCamera();
 
         //Se inicializa el renderizado
         this.debugRenderer = new Box2DDebugRenderer();
@@ -142,16 +147,15 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     private void prepareScore(){
-/*        //Todo 3.1 ...Y la inicializamos a 0
         this.scoreNumber = 0;
-        this.scoreNumber = this.mainGame.assetManager.getFont();
-        this.scoreNumber.getData().scale(1f);
+        this.score = this.mainGame.assetManager.getFont();
+        this.score.getData().scale(1f);
 
 
-        this.fontCamera = new OrthographicCamera();
-        this.fontCamera.setToOrtho(false, SCREEN_WIDTH,SCREEN_HEIGTH);
-        this.fontCamera.update();
-*/
+        this.fontOrtCamera = new OrthographicCamera();
+        this.fontOrtCamera.setToOrtho(false, SCREEN_WIDTH,SCREEN_HEIGHT);
+        this.fontOrtCamera.update();
+
     }
 
 
@@ -203,15 +207,24 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         addPlatform(delta);
         this.stage.act();
         gyroMovement();
-        ortCamera.position.set(WORLD_WIDTH/2, (ortCamera.position.y + (slime.getY() - ortCamera.position.y)*lerp), 0);
+        worldOrtCamera.position.set(WORLD_WIDTH/2, (worldOrtCamera.position.y + (slime.getY() - worldOrtCamera.position.y)*lerp), 0);
         endScreenTeleport();
         //Esto realiza principalmente la detección de colisiones
         this.world.step(delta,6,2);
         //dibuja la escena
         this.stage.draw();
         //Establece la matriz de proyección.
-        //this.debugRenderer.render(this.world, this.ortCamera.combined);
+        //this.debugRenderer.render(this.world, this.worldOrtCamera.combined);
         removePlatform();
+        updateScore();
+    }
+
+
+    public void updateScore(){
+        this.stage.getBatch().setProjectionMatrix(this.fontOrtCamera.combined);
+        this.stage.getBatch().begin();
+        this.score.draw(this.stage.getBatch(), ""+scoreNumber,SCREEN_WIDTH/1.4f, 725);
+        this.stage.getBatch().end();
     }
 
     @Override
@@ -265,9 +278,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
                     pipe.detach();
                     //Todo 6.4 La eliminamos del escenario
                     pipe.remove();
-
                     //Todo 6.5 La eliminamos del array
                     arrayPlatforms.removeValue(pipe,false);
+                    scoreNumber ++;
                 }
             }
         }
@@ -314,13 +327,15 @@ public class GameScreen  extends BaseScreen implements ContactListener {
             for(Platform platf: arrayPlatforms){
                 platf.stopPlatform();
             }
+            killS.play();
+            mainGame.setScreen(new GameOverScreen(mainGame));
         }
     }
 
 
     public void enougth(){
         //Han bajado lo suficiente entonces vuelvo a establecer su velocidad al valor por defecto
-        for (Platform platform1 : this.arrayPlatforms ){
+        for (Platform platform1 : this.arrayPlatforms){
             platform1.goDown(PLATFSPEEDY);
         }
     }

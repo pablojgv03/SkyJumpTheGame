@@ -32,7 +32,14 @@ public class Utils {
     public static final String PLATFORM7 = "platform7";
         //Sounds
     public static final String JUMP_S = "jumpS.mp3";
+    public static final String KILL_S = "kill.mp3";
     public static final String BACKGROUND_M = "backGroundM.mp3";
+    public static final String GETREADY_M = "getReady.mp3";
+
+
+    //Creamos los identificadores de las fuentes
+    public static final String FONT_FNT = "Font.fnt";
+    public static final String FONT_PNG = "Font.png";
 
     //Identificador de cuerpos
         //actor
