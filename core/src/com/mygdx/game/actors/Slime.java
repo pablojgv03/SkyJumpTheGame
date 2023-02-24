@@ -70,7 +70,9 @@ public class Slime extends Actor {
         createFixture();
     }
 
-    //Create the body
+    /**
+     * Create the actor's body
+     */
     private void createBody(){
         BodyDef bodyDef = new BodyDef();
         //Establish the position
@@ -81,7 +83,9 @@ public class Slime extends Actor {
         this.body = this.world.createBody(bodyDef);
     }
 
-    //Create the body's shape or "hitbox"
+    /**
+     * Create the body's shape or "hitbox"
+     */
     private void createFixture(){
         //Create a rectangular shape
         PolygonShape shape = new PolygonShape();
@@ -95,12 +99,18 @@ public class Slime extends Actor {
         shape.dispose();
     }
 
-    //Get the state of the actor
+    /**
+     * Get the state of the actor
+     * @return int
+     * - Body's actual state
+     */
     public int getState(){
         return this.state;
     }
 
-    //Changes the actor's state to STATE_DEAD
+    /**
+     * Changes the body's state to STATE_DEAD
+     */
     public void kill() {
         state = STATE_DEAD;
         stateTime = 0f;
@@ -110,7 +120,13 @@ public class Slime extends Actor {
     public void act(float delta) {
     }
 
-
+    /**
+     * Set the linear velocity of the body to the values in parameters
+     * @param x
+     * The future 'x' axis velocity
+     * @param y
+     * The future 'y' axis velocity
+     */
     public void move(float x, float y){
         this.body.setLinearVelocity(x,y);
     }
@@ -122,21 +138,34 @@ public class Slime extends Actor {
         batch.draw(this.bodyTr, getX(),getY(), SLIME_WIDTH, SLIME_HEIGHT);
     }
 
-    //Detach, destroys the fixture and body
+    /**
+     * Detach the body destroying its fixture and destroying it self
+     */
     public void detach(){
         this.body.destroyFixture(this.fixture);
         this.world.destroyBody(this.body);
     }
 
+    /**
+     * Get the linear velocity of the body
+     * @return Vector2
+     * - The linear velocity of the body
+     */
     public Vector2 getLinearVelocity(){
     return this.body.getLinearVelocity();
     }
 
 
-    //When it disappear from the screen I set it's position to the opposite site
+    /**
+     * Set the body position at its y position but in the right frame of our screen
+     */
     public void right(){
         this.body.setTransform(new Vector2(WORLD_WIDTH,this.body.getPosition().y), 0);
     }
+
+    /**
+     * Set the body position at its y position but in the left frame of our screen
+     */
     public void left(){
         this.body.setTransform(new Vector2(0,this.body.getPosition().y), 0);
     }

@@ -45,10 +45,10 @@ import com.mygdx.game.actors.Platform;
 import com.mygdx.game.actors.Slime;
 
 public class GameScreen  extends BaseScreen implements ContactListener {
-    //Linear Interpolation (to make camera movements more fluid)
+    //Linear Interpolation (in order to make camera movements more fluid)
     private static final float lerp = 0.08f;
 
-    //those variables are for the control of platform spawn
+    //Those variables are for the control of platform spawn
     private  static final float PLATFORM_SPAWN_TIME = 2.25f;
     private float platformSpawnTime;
     private float lastCreatedTime;
@@ -65,7 +65,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     private Fixture fixFloor;
     private Body bodyFloor;
 
-    //background image
+    //Background image
     private Image background;
 
     private World world;
@@ -82,20 +82,23 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
     private Box2DDebugRenderer debugRenderer;
 
-    //need two cameras one for the world and another one in order to show the score
+    //Need two cameras one for the world and another one in order to show the score
     private OrthographicCamera worldOrtCamera;
     private OrthographicCamera fontOrtCamera;
     private BitmapFont score;
 
-
+    /**
+     * The game screen constructor
+     * @param mainGame
+     */
     public GameScreen(MainGame mainGame) {
         super(mainGame);
 
-        //initialize the world
+        //Initialize the world
         this.world = new World(new Vector2(0,-14), true);
 
         this.world.setContactListener(this);
-        //the scoreNumber always starts at 0
+        //The scoreNumber always starts at 0
         scoreNumber = 0;
 
         FitViewport fitViewport = new FitViewport(CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -112,17 +115,17 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.platformSpawnTime = 0f;
         this.lastCreatedTime = 0f;
 
-        //initialize the orthographic camera
+        //Initialize the orthographic camera
         this.worldOrtCamera = (OrthographicCamera) this.stage.getCamera();
 
-        //and initialize the render
+        //Initialize the render
         this.debugRenderer = new Box2DDebugRenderer();
 
         prepareScore();
     }
 
     /**
-     * add or update the background
+     * Add or update the background
      */
     public void addBackground(){
         this.background = new Image(mainGame.assetManager.getBackground());
@@ -134,12 +137,15 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.stage.addActor(this.background);
     }
 
+    /**
+     * Add our actor to the stage
+     */
     public void addActor(){
         //Get the texture Region of the actor and save it on slimeTr
         TextureRegion slimeTr = mainGame.assetManager.getSlimeTR();
         this.slime = new Slime(this.world, new Vector2(2.4f,6f), slimeTr);
 
-        //add the acto to the stage
+        //Add the actor to the stage
         this.stage.addActor(this.slime);
     }
 
@@ -160,10 +166,10 @@ public class GameScreen  extends BaseScreen implements ContactListener {
      * Add some initial platforms while we wait the other go down enough
      */
     public void addInitPlarforms(){
-        //here i use an animation for the platfoms
+        //Here I use an animation for the platforms
         Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
         int posicion = 4;
-        //each platform is 5 world units upper than the others
+        //Each platform is 5 world units upper from the others
         for(int i =0; i<3; i++) {
             this.platform = new Platform(this.world, platfSprite, new Vector2(2.4f, posicion));
             arrayPlatforms.add(this.platform);
@@ -173,7 +179,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     /**
-     * add the floor, which will be the object that kill our actor
+     * Add the floor, which will be the object that kill our actor
      * doesn't have texture due to the fact that it will be invisible
      */
     private void addFloor() {
@@ -190,23 +196,25 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     /**
-     * this metod allow the actor teleport from one part of the screen to the opposite site
+     * When it detect that the actor is out of screen from one of the lateral frames
+     * teleport the actor to the opposite site frame
      */
     private void endScreenTeleport() {
         // Verifies if it has gone out form the Left site
         if (slime.getX() < -0.35) {
-            //set the position at the same height but at the right frame
+            //Set the position at the same height but at the right frame
             slime.right();
         }
         // Verifies if it has gone out form the right site
         if (slime.getX() > WORLD_WIDTH-0.35) {
-            //set the position at the same height but at the left frame
+            //Set the position at the same height but at the left frame
             slime.left();
         }
     }
 
     /**
-     * get the gyroscope movement and move the actor depending of gyroscope movement
+     * Get the gyroscope movement and call a method which set a 'x' axis
+     * linear velocity to the actor depending of gyroscope values
      */
     private void gyroMovement(){
         if(gyroscopeAvail){
@@ -215,39 +223,36 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         }
     }
 
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //add the platforms
         addPlatform(delta);
 
         this.stage.act();
 
-        //set the actor x movements depending of the gyroscope values
         gyroMovement();
-        //the camera position actualize in order to follow our actor that will make a bigger jump feeling
+
+        //The camera position actualize in order to follow our actor that will make a bigger jump feeling
         worldOrtCamera.position.set(WORLD_WIDTH/2, (worldOrtCamera.position.y + (slime.getY() - worldOrtCamera.position.y)*lerp), 0);
 
         endScreenTeleport();
 
         this.world.step(delta,6,2);
 
-        //draw the stage
+        //Draw the stage
         this.stage.draw();
 
-        //if we want to show the physics frames only uncomment the line below
-        //this.debugRenderer.render(this.world, this.worldOrtCamera.combined);
-
-        //check the platform remove
         removePlatform();
-        //update the score
+
         updateScore();
+
+        //If we want to show the physics frames only uncomment the line below...
+        //this.debugRenderer.render(this.world, this.worldOrtCamera.combined);
     }
 
     /**
-     * refresh the score
+     * Refresh the score
      */
     public void updateScore(){
         this.stage.getBatch().setProjectionMatrix(this.fontOrtCamera.combined);
@@ -257,7 +262,7 @@ public class GameScreen  extends BaseScreen implements ContactListener {
     }
 
     /**
-     * add the necessary elements and starts the background music
+     * Add the necessary elements and starts the background music
      */
     @Override
     public void show() {
@@ -270,30 +275,49 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.backgroundM.play();
     }
 
-
+    /**
+     * This method add the platforms outside of our camera vision and add then to the platform's array
+     * @param delta
+     */
     public void addPlatform(float delta){
         Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
-
+        //Check that our actor still alive
         if(slime.getState() == slime.STATE_ALIVE) {
             this.lastCreatedTime+=delta;
             this.platformSpawnTime+=delta;
-            //Todo 4. Si el tiempo acumulado es mayor que el tiempo que hemos establecido, se crea una tubería...
+            //If since the last platform was created has elapsed more than 1.40 seconds then
+            //stop the fast go down whit the enough() method which established the velocity
+            //to default velocity
             if(lastCreatedTime>1.40f){
                 enougth();
+                //If the platform spawn time has been risen then spawn a new platform
                 if(this.platformSpawnTime >= PLATFORM_SPAWN_TIME) {
 
-                    //Todo 4.1 ... y le restamos el tiempo a la variable acumulada para que vuelva el contador a 0.
                     this.platformSpawnTime-=PLATFORM_SPAWN_TIME;
+
+                    //Spawn in a random x axis position
                     float posRandomX = MathUtils.random((PLATFORM_WIDTH/2), WORLD_WIDTH-(PLATFORM_WIDTH/2));
-                    //Cambiamos la coordenada x para que se cree fuera de la pantalla (5f)
+
+                    //Create the platform
                     this.platform = new Platform(this.world, platfSprite, new Vector2(posRandomX, 15f));
+
+                    //Add the new platform to the array
                     arrayPlatforms.add(this.platform);
+
+                    //Add the new platform to the stage
                     this.stage.addActor(this.platform);
+
+                    //Set the created time to 0
                     lastCreatedTime=0;
                 }
             }
         }
     }
+
+    /**
+     * Remove ta platform when it goes out of screen and the world isn't locked
+     * this is done to free memory space
+     */
     public void removePlatform(){
         for (Platform platf : this.arrayPlatforms) {
             if(!world.isLocked()) {
@@ -318,47 +342,77 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.stage.dispose();
         this.world.dispose();
     }
-
+    //get the gyroscope availability
     boolean gyroscopeAvail = Gdx.input.isPeripheralAvailable(Input.Peripheral.Gyroscope);
 
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    private boolean areColider(Contact contact, Object objA, Object objB) {
+    /**
+     * Detect if the parameters bodies are collider
+     * @param contact
+     * The detected contact
+     * @param objA
+     * Body A
+     * @param objB
+     * Body B
+     * @return
+     * True in case of collision, False otherwise
+     */
+    private boolean areCollider(Contact contact, Object objA, Object objB) {
         return (contact.getFixtureA().getUserData().equals(objA) && contact.getFixtureB().getUserData().equals(objB)) ||
                 (contact.getFixtureA().getUserData().equals(objB) && contact.getFixtureB().getUserData().equals(objA));
     }
 
     @Override
     public void beginContact(Contact contact) {
-
-        if (areColider(contact, USER_SLIME, USER_PLATFORM)) {
+        //Check if there is a collision between the bodies
+        //Case slime collides with the platform increases the platform speed for a period of time
+        if (areCollider(contact, USER_SLIME, USER_PLATFORM)) {
             if(slime.getLinearVelocity().y < 0) {
                 slime.move(0, JUMP_SPEED);
+                //Play the jump sound
                 this.jumpS.play();
+
+                //Increases the platform speed
                 platfGoDown();
+
                 platformSpawnTime += 4;
+
+                //Score increases
                 this.scoreNumber++;
             }
-        } else {
+        }
+        //if the collision isn't with a platform the smile die and the game finish
+        else {
+            //Kill the slime
             slime.kill();
+
+            //Stop the background music
             this.backgroundM.stop();
+
+            //Stop all the array platforms
             for(Platform platf: arrayPlatforms){
                 platf.stopPlatform();
             }
+
+            //Play the kill sound
             killS.play();
+
+            //Shows the game over screen
             mainGame.setScreen(new GameOverScreen(mainGame));
         }
     }
 
-
+    /**
+     * Set all the array platforms Speed to the default Speed
+     */
     public void enougth(){
-        //Han bajado lo suficiente entonces vuelvo a establecer su velocidad al valor por defecto
         for (Platform platform1 : this.arrayPlatforms){
             platform1.goDown(PLATFSPEEDY);
         }
     }
+
+    /**
+     * Set all the array's platforms Speed to the fast fall Speed
+     */
     public void platfGoDown(){
         for (Platform platform1 : this.arrayPlatforms ){
             platform1.goDown(FALLSPEED);

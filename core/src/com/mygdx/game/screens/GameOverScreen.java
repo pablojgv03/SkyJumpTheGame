@@ -16,7 +16,10 @@ public class GameOverScreen  extends BaseScreen{
     private int height, width;
     private BitmapFont score;
 
-    //Constructor
+    /**
+     * Constructor
+     * @param mainGame
+     */
     public GameOverScreen(MainGame mainGame) {
         super(mainGame);
         this.height = Gdx.graphics.getHeight();
@@ -32,10 +35,7 @@ public class GameOverScreen  extends BaseScreen{
         touched = false;
     }
 
-    /**
-     * Called when the screen should render itself.
-     * @param delta The time in seconds since the last render.
-     */
+
     @Override
     public void render(float delta) {
         super.render(delta);

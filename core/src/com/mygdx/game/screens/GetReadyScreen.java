@@ -8,6 +8,7 @@ import com.mygdx.game.MainGame;
 
 
 public class GetReadyScreen extends BaseScreen {
+    //Variables Declaration and Initialization
     private SpriteBatch batch;
     private Texture getReadyTexture;
     private boolean touched;
@@ -19,7 +20,9 @@ public class GetReadyScreen extends BaseScreen {
     private final float fade3Time = transitionDuration * 0.75f; //75%
     private Music getReadyM;
 
-
+    /**
+     * Get Ready Screen Constructor
+     */
     public GetReadyScreen(MainGame mainGame) {
         super(mainGame);
         this.height = Gdx.graphics.getHeight();
@@ -52,6 +55,7 @@ public class GetReadyScreen extends BaseScreen {
         }
         //if it was touched i start the fade process getting the image darker
         //and in addition setting the music volume a 25% lower until it reaches 0%
+        //that make the transition less sudden
         if(touched) {
             transitionTime += delta;
             if (transitionTime >= fade1Time){

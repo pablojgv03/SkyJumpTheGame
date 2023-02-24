@@ -32,6 +32,10 @@ public class AssetMan {
     private AssetManager assetManager;
     private TextureAtlas textureAtlas;
 
+    /**
+     * Constructor
+     * - Loads the necessaries asset managers
+     */
     public AssetMan(){
         this.assetManager = new AssetManager();
         //Loads images from texture atlases
@@ -44,23 +48,31 @@ public class AssetMan {
         assetManager.finishLoading();
         //get the atlas map and save it in our textureAtlas
         this.textureAtlas = assetManager.get(ATLAS_MAP);
-
-
-
     }
-    //BACKGROUND IMAGE
+    /**
+     * Get the Background's Atlas TextureRegion
+     * @return TextureRegion
+     * - A region of the Atlas
+     */
     public TextureRegion getBackground(){
         return this.textureAtlas.findRegion(BACKGROUND_IMAGE);
     }
-    //SLIME IMAGE
+
+    /**
+     * Get the Slime's Atlas TextureRegion
+     * @return TextureRegion
+     * - A region of the Atlas
+     */
     public TextureRegion getSlimeTR(){
         return this.textureAtlas.findRegion(USER_SLIME);
     }
 
 
     /**
-     * MAKE THE PLATFORM'S ANIMATION
-     * @return
+     * Return the platform's animation
+     * @return Animation
+     * - An Animation<TextureRegion> Composed by a frame duration and a group
+     * of regions in the textureAtlas
      */
     public Animation<TextureRegion> getPlatformAnimation(){
         return new Animation<TextureRegion>(0.143f,
@@ -74,19 +86,39 @@ public class AssetMan {
     }
 
     //SOUNDS
-    //GET THE JUMP SOUND
+
+    /**
+     * Get the jump sound
+     * @return Sound
+     * - A sound from the assetManager
+     */
     public Sound getJumpS(){
         return this.assetManager.get(JUMP_S);
     }
-    //GET THE SOUND OF END MATCH
+
+    /**
+     * Get the kill sound
+     * @return Sound
+     * - A sound from the assetManager
+     */
     public Sound getKillS(){
         return this.assetManager.get(KILL_S);
     }
-    //GET THE BACKGROUND MUSICA
+
+    /**
+     * Get the background music
+     * @return Sound
+     * - A music from the assetManager
+     */
     public Music getBacgroundM(){
         return this.assetManager.get(BACKGROUND_M);
     }
-    //GET THE READY MUSIC
+
+    /**
+     * Get the getReadyScreen music
+     * @return Sound
+     * - A music from the assetManager
+     */
     public Music getGetReadyM(){
         return this.assetManager.get(GETREADY_M);
     }

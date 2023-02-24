@@ -87,12 +87,18 @@ public class Platform extends Actor {
         shape.dispose();
     }
 
-    //Moves the platform as if they were falling
+    /**
+     * Moves the platform as if it were falling
+     * @param fallSpeed
+     */
     public void goDown(float fallSpeed){
         this.bodyPlatf.setLinearVelocity(0,fallSpeed);
     }
 
-    //In order to know when the platform is out of screen
+    /**
+     * Allows know if the platform is out of screen
+     * @return
+     */
     public boolean isOutOfScreen(){
         return this.bodyPlatf.getPosition().y <= PLATFORM_HEIGHT;
     }
@@ -115,13 +121,17 @@ public class Platform extends Actor {
         stateTime += Gdx.graphics.getDeltaTime();
     }
 
-    //Stops the platform
+    /**
+     * Stop the body
+     */
     public void stopPlatform() {
         this.bodyPlatf.setLinearVelocity(0, 0);
     }
 
 
-    //Detach
+    /**
+     * Detach the body destroying its fixture and destroying it self
+     */
     public void detach(){
         bodyPlatf.destroyFixture(fixturePlatf);
         world.destroyBody(bodyPlatf);

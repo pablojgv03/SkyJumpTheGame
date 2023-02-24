@@ -1,6 +1,7 @@
 package com.mygdx.game.extra;
 
 public class Utils {
+    //Screen width and height values
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
 
@@ -14,13 +15,13 @@ public class Utils {
     public static final float WORLD_WIDTH = 4.8f;
 
     //Platform Sizes
-    public static float PLATFORM_WIDTH = 1.2f;
-    public static float PLATFORM_HEIGHT = 0.2f;
+    public static float PLATFORM_WIDTH = 1f;
+    public static float PLATFORM_HEIGHT = 0.18f;
 
     //ACTOR JUMP SPEED
     public static final float JUMP_SPEED = 10f;
 
-    //Identificators
+    //Identifiers
     public static final String ATLAS_MAP = "Atlas.atlas";
     public static final String BACKGROUND_IMAGE = "backGround";
     public static final String PLATFORM1 = "platform1";
@@ -35,14 +36,14 @@ public class Utils {
     public static final String KILL_S = "kill.mp3";
     public static final String BACKGROUND_M = "backGroundM.mp3";
     public static final String GETREADY_M = "getReady.mp3";
-        //Fonts identificators
+        //Fonts Identifiers
     public static final String FONT_FNT = "Font.fnt";
     public static final String FONT_PNG = "Font.png";
-        //Bodies identificators
-            //actor
+        //Bodies Identifiers
+            //Actor
     public static final String USER_SLIME = "Slime";
-            //floor
+            //Floor
     public static final String USER_FLOOR = "floor";
-            //platform
+            //Platform
     public static final String USER_PLATFORM = "platform";
 }
