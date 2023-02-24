@@ -26,25 +26,23 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-//Como su nombre indica es el manager de los assets
+
 public class AssetMan {
 
     private AssetManager assetManager;
-    //carga las imagenes del atlas
     private TextureAtlas textureAtlas;
 
     public AssetMan(){
         this.assetManager = new AssetManager();
-        //carga el atlas
+        //Loads images from texture atlases
         assetManager.load(ATLAS_MAP, TextureAtlas.class);
-        //Bloquea hasta que todos los assets estan cargados
         assetManager.load(JUMP_S, Sound.class);
         assetManager.load(KILL_S, Sound.class);
         assetManager.load(BACKGROUND_M, Music.class);
         assetManager.load(GETREADY_M, Music.class);
 
         assetManager.finishLoading();
-        //Se le pasa el mapa de atlas procesado por el assetManager y se guarda en el textureAtlas
+        //get the atlas map and save it in our textureAtlas
         this.textureAtlas = assetManager.get(ATLAS_MAP);
 
 
@@ -58,7 +56,12 @@ public class AssetMan {
     public TextureRegion getSlimeTR(){
         return this.textureAtlas.findRegion(USER_SLIME);
     }
-    //PLATFORM ANIMATION
+
+
+    /**
+     * MAKE THE PLATFORM'S ANIMATION
+     * @return
+     */
     public Animation<TextureRegion> getPlatformAnimation(){
         return new Animation<TextureRegion>(0.143f,
                 textureAtlas.findRegion(PLATFORM1),
@@ -69,21 +72,29 @@ public class AssetMan {
                 textureAtlas.findRegion(PLATFORM6),
                 textureAtlas.findRegion(PLATFORM7));
     }
+
+    //SOUNDS
+    //GET THE JUMP SOUND
     public Sound getJumpS(){
         return this.assetManager.get(JUMP_S);
     }
+    //GET THE SOUND OF END MATCH
     public Sound getKillS(){
         return this.assetManager.get(KILL_S);
     }
-
+    //GET THE BACKGROUND MUSICA
     public Music getBacgroundM(){
         return this.assetManager.get(BACKGROUND_M);
     }
+    //GET THE READY MUSIC
     public Music getGetReadyM(){
         return this.assetManager.get(GETREADY_M);
     }
 
-
+    /**
+     * Creates a BitmapFont from a BMFont file and return it
+     * @return
+     */
     public BitmapFont getFont(){
         return new BitmapFont(Gdx.files.internal(FONT_FNT),Gdx.files.internal(FONT_PNG), false);
     }

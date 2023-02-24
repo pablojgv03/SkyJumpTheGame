@@ -2,20 +2,16 @@ package com.mygdx.game.actors;
 
 
 
-import static com.mygdx.game.extra.Utils.JUMP_SPEED;
 import static com.mygdx.game.extra.Utils.USER_SLIME;
 import static com.mygdx.game.extra.Utils.WORLD_WIDTH;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -50,6 +46,7 @@ public class Slime extends Actor {
 
     //The world class manages all physics entities, dynamic simulation, and asynchronous queries.
     private World world;
+
 
 
     /**
@@ -98,10 +95,12 @@ public class Slime extends Actor {
         shape.dispose();
     }
 
+    //Get the state of the actor
     public int getState(){
         return this.state;
     }
 
+    //Changes the actor's state to STATE_DEAD
     public void kill() {
         state = STATE_DEAD;
         stateTime = 0f;
@@ -111,24 +110,21 @@ public class Slime extends Actor {
     public void act(float delta) {
     }
 
+
     public void move(float x, float y){
         this.body.setLinearVelocity(x,y);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        //se le establece la posicion
+        //establish the position
         setPosition(body.getPosition().x-(SLIME_WIDTH/2), body.getPosition().y-(SLIME_HEIGHT/2));
         batch.draw(this.bodyTr, getX(),getY(), SLIME_WIDTH, SLIME_HEIGHT);
-
-        //delta es el lapso de tiempo entre el frame actual y el último frame (en segundos).
     }
 
-    //para eliminar
+    //Detach, destroys the fixture and body
     public void detach(){
-        //destruye la forma
         this.body.destroyFixture(this.fixture);
-        //y el cuerpo
         this.world.destroyBody(this.body);
     }
 
@@ -137,11 +133,11 @@ public class Slime extends Actor {
     }
 
 
-
-    public void derecha(){
+    //When it disappear from the screen I set it's position to the opposite site
+    public void right(){
         this.body.setTransform(new Vector2(WORLD_WIDTH,this.body.getPosition().y), 0);
     }
-    public void izquierda(){
+    public void left(){
         this.body.setTransform(new Vector2(0,this.body.getPosition().y), 0);
     }
 }

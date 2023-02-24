@@ -47,63 +47,59 @@ import com.mygdx.game.actors.Slime;
 public class GameScreen  extends BaseScreen implements ContactListener {
     //Linear Interpolation (to make camera movements more fluid)
     private static final float lerp = 0.08f;
-    private  static final float PLATFORM_SPAWN_TIME = 2.25f;
 
+    //those variables are for the control of platform spawn
+    private  static final float PLATFORM_SPAWN_TIME = 2.25f;
     private float platformSpawnTime;
     private float lastCreatedTime;
-    //Escenario
+
     private Stage stage;
+
     //Actor
     private Slime slime;
+
     //Platform
     private Platform platform;
+
     //Floor
     private Fixture fixFloor;
     private Body bodyFloor;
-    //Fondo
+
+    //background image
     private Image background;
 
-    //Mundo
     private World world;
 
-    //Score
+    //Score variable I'll use it in GameOverScreen too
     public static int scoreNumber;
 
     //Platforms Array
     private Array<Platform> arrayPlatforms;
 
-    int screenWidth = Gdx.graphics.getWidth();
-    int screenHeight = Gdx.graphics.getHeight();
-
+    //SOUND AND MUSIC
     private Music backgroundM;
     private Sound jumpS, killS;
 
-    //Depuración
     private Box2DDebugRenderer debugRenderer;
-    //Orthographic Camera
+
+    //need two cameras one for the world and another one in order to show the score
     private OrthographicCamera worldOrtCamera;
     private OrthographicCamera fontOrtCamera;
     private BitmapFont score;
 
-    //Pantalla del juego
+
     public GameScreen(MainGame mainGame) {
-        //constructor juego principal
         super(mainGame);
 
-        //inicializacion del mundo
+        //initialize the world
         this.world = new World(new Vector2(0,-14), true);
 
-        //se le pasa el objeto que implementa la interfaz
         this.world.setContactListener(this);
-
-
+        //the scoreNumber always starts at 0
         scoreNumber = 0;
-        //siempre mantiene la relación de aspecto del tamaño de la pantalla virtual
-        //(ventana virtual), al tiempo que la escala tanto como sea posible para
-        //que se ajuste a la pantalla.
+
         FitViewport fitViewport = new FitViewport(CAMERA_WIDTH, CAMERA_HEIGHT);
 
-        //Se le pone al stage
         this.stage = new Stage(fitViewport);
 
         //Music & sounds
@@ -111,57 +107,63 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         this.jumpS = this.mainGame.assetManager.getJumpS();
         this.killS = this.mainGame.assetManager.getKillS();
 
-        //Inicializo el array
+        //Array where I save the created platforms
         this.arrayPlatforms = new Array();
         this.platformSpawnTime = 0f;
         this.lastCreatedTime = 0f;
-        //Se inicializa la camara ortografica
+
+        //initialize the orthographic camera
         this.worldOrtCamera = (OrthographicCamera) this.stage.getCamera();
 
-        //Se inicializa el renderizado
+        //and initialize the render
         this.debugRenderer = new Box2DDebugRenderer();
 
         prepareScore();
     }
 
-
-
-    //Para añadir o actualizar el fondo
+    /**
+     * add or update the background
+     */
     public void addBackground(){
-        //Se le pone la imagen al fondo
         this.background = new Image(mainGame.assetManager.getBackground());
-        //Se posiciona el fondo en la posicion x:0 y:0
+
         this.background.setPosition(0,0);
-        //Se le pone al fondo el tamaño del mundo
+
         this.background.setSize(WORLD_WIDTH,WORLD_HEIGHT);
-        //El escenario o escena añade al actor en el fondo
+
         this.stage.addActor(this.background);
     }
 
     public void addActor(){
-        //Obtengo el la region de la textura de nuestro actor para pasarsela por parametro
-        TextureRegion SlimeTr = mainGame.assetManager.getSlimeTR();
-        this.slime = new Slime(this.world, new Vector2(2.4f,6f), SlimeTr);
-        //añado el actor a la escena
+        //Get the texture Region of the actor and save it on slimeTr
+        TextureRegion slimeTr = mainGame.assetManager.getSlimeTR();
+        this.slime = new Slime(this.world, new Vector2(2.4f,6f), slimeTr);
+
+        //add the acto to the stage
         this.stage.addActor(this.slime);
     }
 
+    /**
+     * Prepare the score into the orthographic camera and scale a 50% because was too big
+     */
     private void prepareScore(){
         this.scoreNumber = 0;
         this.score = this.mainGame.assetManager.getFont();
-        this.score.getData().scale(1f);
-
+        this.score.getData().scale(0.5f);
 
         this.fontOrtCamera = new OrthographicCamera();
         this.fontOrtCamera.setToOrtho(false, SCREEN_WIDTH,SCREEN_HEIGHT);
         this.fontOrtCamera.update();
-
     }
 
-
+    /**
+     * Add some initial platforms while we wait the other go down enough
+     */
     public void addInitPlarforms(){
+        //here i use an animation for the platfoms
         Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
         int posicion = 4;
+        //each platform is 5 world units upper than the others
         for(int i =0; i<3; i++) {
             this.platform = new Platform(this.world, platfSprite, new Vector2(2.4f, posicion));
             arrayPlatforms.add(this.platform);
@@ -170,6 +172,10 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         }
     }
 
+    /**
+     * add the floor, which will be the object that kill our actor
+     * doesn't have texture due to the fact that it will be invisible
+     */
     private void addFloor() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(WORLD_WIDTH / 2f, 1.2f);
@@ -183,50 +189,76 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         edge.dispose();
     }
 
+    /**
+     * this metod allow the actor teleport from one part of the screen to the opposite site
+     */
     private void endScreenTeleport() {
+        // Verifies if it has gone out form the Left site
         if (slime.getX() < -0.35) {
-            // Ajusta la posición para que aparezca por el lado derecho
-            slime.derecha();
+            //set the position at the same height but at the right frame
+            slime.right();
         }
-            // Verifica si el actor ha salido de la pantalla por el lado derecho
+        // Verifies if it has gone out form the right site
         if (slime.getX() > WORLD_WIDTH-0.35) {
-            // Ajusta la posición para que aparezca por el lado izquierdo
-            slime.izquierda();
+            //set the position at the same height but at the left frame
+            slime.left();
         }
     }
 
+    /**
+     * get the gyroscope movement and move the actor depending of gyroscope movement
+     */
     private void gyroMovement(){
         if(gyroscopeAvail){
             float gyroX = Gdx.input.getAccelerometerX();
             slime.move(-gyroX, slime.getLinearVelocity().y);
         }
     }
+
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //add the platforms
         addPlatform(delta);
+
         this.stage.act();
+
+        //set the actor x movements depending of the gyroscope values
         gyroMovement();
+        //the camera position actualize in order to follow our actor that will make a bigger jump feeling
         worldOrtCamera.position.set(WORLD_WIDTH/2, (worldOrtCamera.position.y + (slime.getY() - worldOrtCamera.position.y)*lerp), 0);
+
         endScreenTeleport();
-        //Esto realiza principalmente la detección de colisiones
+
         this.world.step(delta,6,2);
-        //dibuja la escena
+
+        //draw the stage
         this.stage.draw();
-        //Establece la matriz de proyección.
+
+        //if we want to show the physics frames only uncomment the line below
         //this.debugRenderer.render(this.world, this.worldOrtCamera.combined);
+
+        //check the platform remove
         removePlatform();
+        //update the score
         updateScore();
     }
 
-
+    /**
+     * refresh the score
+     */
     public void updateScore(){
         this.stage.getBatch().setProjectionMatrix(this.fontOrtCamera.combined);
         this.stage.getBatch().begin();
-        this.score.draw(this.stage.getBatch(), ""+scoreNumber,SCREEN_WIDTH/1.4f, 725);
+        this.score.draw(this.stage.getBatch(), "SCORE: "+scoreNumber,SCREEN_WIDTH*0.1f, SCREEN_HEIGHT*0.9f);
         this.stage.getBatch().end();
     }
 
+    /**
+     * add the necessary elements and starts the background music
+     */
     @Override
     public void show() {
         addBackground();
@@ -236,15 +268,9 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
         this.backgroundM.setLooping(true);
         this.backgroundM.play();
-        //addCeiling();
-        //addPlatform();
     }
 
-    /*public void addPlatform(){
-           Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
-           this.platform = new Platform(this.world, platfSprite, new Vector2(1f, 4f));
-           this.stage.addActor(this.platform);
-       }*/
+
     public void addPlatform(float delta){
         Animation<TextureRegion> platfSprite = mainGame.assetManager.getPlatformAnimation();
 
@@ -269,18 +295,12 @@ public class GameScreen  extends BaseScreen implements ContactListener {
         }
     }
     public void removePlatform(){
-        for (Platform pipe : this.arrayPlatforms) {
-            //Todo 6.1 Si el mundo no está bloqueado, es decir, que no esté actualizando la física en ese preciso momento...
+        for (Platform platf : this.arrayPlatforms) {
             if(!world.isLocked()) {
-                //Todo 6.2...y la tubería en cuestión está fuera de la pantalla.
-                if(pipe.isOutOfScreen()) {
-                    //Todo 6.3 Eliminamos los recursos
-                    pipe.detach();
-                    //Todo 6.4 La eliminamos del escenario
-                    pipe.remove();
-                    //Todo 6.5 La eliminamos del array
-                    arrayPlatforms.removeValue(pipe,false);
-                    scoreNumber ++;
+                if(platf.isOutOfScreen()) {
+                    platf.detach();
+                    platf.remove();
+                    arrayPlatforms.removeValue(platf,false);
                 }
             }
         }
@@ -315,11 +335,11 @@ public class GameScreen  extends BaseScreen implements ContactListener {
 
         if (areColider(contact, USER_SLIME, USER_PLATFORM)) {
             if(slime.getLinearVelocity().y < 0) {
-                this.scoreNumber++;
                 slime.move(0, JUMP_SPEED);
                 this.jumpS.play();
                 platfGoDown();
                 platformSpawnTime += 4;
+                this.scoreNumber++;
             }
         } else {
             slime.kill();

@@ -19,7 +19,7 @@ import com.mygdx.game.extra.Utils;
 
 public class Platform extends Actor {
 
-        //Velocity
+        //Velocities
     public static final float PLATFSPEEDY = -2f;
 
     private static final float SPEEDX = 0;
@@ -74,8 +74,9 @@ public class Platform extends Actor {
     }
 
 
-
-    //Fixture
+    /**
+     * Create the Platform's Fixture
+     */
     private void createFixture() {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(PLATFORM_WIDTH/2, PLATFORM_HEIGHT/2);
@@ -85,11 +86,13 @@ public class Platform extends Actor {
         //shape dispose
         shape.dispose();
     }
+
+    //Moves the platform as if they were falling
     public void goDown(float fallSpeed){
         this.bodyPlatf.setLinearVelocity(0,fallSpeed);
     }
 
-
+    //In order to know when the platform is out of screen
     public boolean isOutOfScreen(){
         return this.bodyPlatf.getPosition().y <= PLATFORM_HEIGHT;
     }
@@ -112,7 +115,7 @@ public class Platform extends Actor {
         stateTime += Gdx.graphics.getDeltaTime();
     }
 
-
+    //Stops the platform
     public void stopPlatform() {
         this.bodyPlatf.setLinearVelocity(0, 0);
     }
@@ -122,10 +125,5 @@ public class Platform extends Actor {
     public void detach(){
         bodyPlatf.destroyFixture(fixturePlatf);
         world.destroyBody(bodyPlatf);
-    }
-
-
-    public Vector2 getPosition() {
-        return this.bodyPlatf.getPosition();
     }
 }

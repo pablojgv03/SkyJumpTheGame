@@ -7,14 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MainGame;
-
+//GAME OVER SCREEN
 public class GameOverScreen  extends BaseScreen{
+    //Variables Declaration and Initialization
     private SpriteBatch batch;
     private Texture gameOverTexture;
     private boolean touched;
     private int height, width;
     private BitmapFont score;
 
+    //Constructor
     public GameOverScreen(MainGame mainGame) {
         super(mainGame);
         this.height = Gdx.graphics.getHeight();
@@ -30,14 +32,19 @@ public class GameOverScreen  extends BaseScreen{
         touched = false;
     }
 
+    /**
+     * Called when the screen should render itself.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
-
         batch.begin();
         batch.draw(gameOverTexture,0,0, width, height);
-        score.draw(this.batch, "" +  scoreNumber, width/2, height*0.9f);
+        //Draw his score at the 90% of height and 1 world unity from the left frame
+        score.draw(this.batch, "SCORE: " +  scoreNumber, 1f, height*0.9f);
         batch.end();
+        //when touch send to get ready screen
         if (Gdx.input.justTouched() && !touched) {
             touched = true;
             mainGame.setScreen(new GetReadyScreen(mainGame));
